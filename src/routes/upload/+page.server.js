@@ -1,6 +1,7 @@
 import pool from '$lib/server/database.js';
 import { put, del } from '@vercel/blob';
 import { BLOB_READ_WRITE_TOKEN } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
 console.log('TOKEN VALUE:', BLOB_READ_WRITE_TOKEN);
 
 export async function load() {
@@ -60,7 +61,7 @@ export const actions = {
 			]
 		);
 
-		return { success: true };
+		redirect(303, '/');
 	},
 
 	delete: async ({ request }) => {

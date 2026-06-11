@@ -18,7 +18,7 @@ export async function load() {
 }
 
 export const actions = {
-	add: async ({ request }) => {
+	add: async ({ request, cookies }) => {
 		const formData = await request.formData();
 
 		const uploadedImage = formData.get('image');
@@ -36,23 +36,22 @@ export const actions = {
 		);
 
 		// 🔥 FIX: get a real user instead of hardcoding 1
-		const [users] = await pool.execute(
-			'SELECT id FROM users LIMIT 1'
-		);
+		const sessionId = cookies.get('session');
 
-		if (!users.length) {
-			return {
-				success: false,
-				error: 'No users in database'
-			};
-		}
+	if (!sessionId) {
+		throw redirect(303, '/login');
+	}
 
-		const userId = users[0].id;
+	const [sessions] = await pool.execute('SELECT user_id FROM sessions WHERE id = ?',[sessionId]);
+
+	if (!sessions.length) {
+		throw redirect(303, '/login');
+	}
+
+	const userId = sessions[0].user_id;
 
 		// save image
-		await pool.execute(
-			`INSERT INTO images (image, description, author_id, votes)
-			 VALUES (?, ?, ?, ?)`,
+		await pool.execute(`INSERT INTO images (image, description, author_id, votes) VALUES (?, ?, ?, ?)`,
 			[
 				uploadedBlob.url,
 				description,
@@ -61,7 +60,7 @@ export const actions = {
 			]
 		);
 
-		redirect(303, '/');
+		throw redirect(303, '/');
 	},
 
 	delete: async ({ request }) => {

@@ -3,11 +3,10 @@
 </script>
 
 <div class="max-w-4xl mx-auto">
-	<img
-		src={data.image.image}
-		alt={data.image.description}
-		class="w-full rounded-xl shadow mb-6"
-	/>
+    <a href="/" class="inline-flex items-center gap-2 mb-6 text-purple-600 hover:text-purple-800 font-semibold">
+		← Back to Home
+	</a>
+	<img src={data.image.image} alt={data.image.description} class="w-full rounded-xl shadow mb-6"/>
 
 	<div class="bg-white rounded-xl shadow p-6">
 		<h1 class="text-3xl font-bold mb-4">
@@ -20,10 +19,7 @@
 
 		<div class="flex items-center gap-4 mt-6">
 			<form method="POST" action="?/toggleLike">
-				<button
-					type="submit"
-					class="text-4xl hover:scale-110 transition"
-				>
+				<button type="submit" class="text-4xl hover:scale-110 transition">
 					{#if data.liked}
 						❤️
 					{:else}

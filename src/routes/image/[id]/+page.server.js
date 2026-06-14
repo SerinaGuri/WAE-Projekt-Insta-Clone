@@ -78,7 +78,27 @@ export const actions = {
 		}
 
 		const userId = sessions[0].user_id;
-		const imageId = params.id;
+const imageId = params.id;
+
+// get image owner
+const [images] = await pool.execute(
+	'SELECT author_id FROM images WHERE id = ?',
+	[imageId]
+);
+
+if (!images.length) {
+	throw error(404, 'Image not found');
+}
+
+const imageOwnerId = images[0].author_id;
+
+// prevent self-like
+if (imageOwnerId === userId) {
+	return {
+		success: false,
+		error: 'You cannot like your own image'
+	};
+}
 
 		const [existing] = await pool.execute(
 			'SELECT id FROM votes WHERE user_id = ? AND image_id = ?',

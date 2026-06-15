@@ -42,7 +42,7 @@ export async function validateSession(sessionId) {
 	if (!sessionId) return null;
 
 	const [rows] = await pool.execute(
-		`SELECT u.id, u.username
+		`SELECT u.id, u.username, u.is_admin
 		 FROM sessions s
 		 JOIN users u ON s.user_id = u.id
 		 WHERE s.id = ? AND s.expires_at > NOW()`,

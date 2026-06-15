@@ -88,6 +88,22 @@
 						<p class="text-gray-700">
 							{comment.text}
 						</p>
+						{#if data.user?.is_admin}
+	<form method="POST" action="?/deleteComment" class="mt-3">
+		<input
+			type="hidden"
+			name="commentId"
+			value={comment.id}
+		/>
+
+		<button
+			type="submit"
+			class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+		>
+			Delete Comment
+		</button>
+	</form>
+{/if}
 					</div>
 				{/each}
 			</div>

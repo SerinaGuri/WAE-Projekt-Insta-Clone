@@ -32,6 +32,7 @@ export async function load({ params, cookies, url }) {
 	);
 
 	let liked = false;
+	let user = null;
 
 	const sessionId = cookies.get('session');
 
@@ -43,6 +44,15 @@ export async function load({ params, cookies, url }) {
 
 		if (sessions.length) {
 			const userId = sessions[0].user_id;
+
+			const [users] = await pool.execute(
+				'SELECT id, username, is_admin FROM users WHERE id = ?',
+				[userId]
+			);
+
+			if (users.length) {
+				user = users[0];
+			}
 
 			const [votes] = await pool.execute(
 				'SELECT id FROM votes WHERE user_id = ? AND image_id = ?',
@@ -57,6 +67,7 @@ export async function load({ params, cookies, url }) {
 		image: rows[0],
 		liked,
 		comments,
+		user,
 		fromProfile: url.searchParams.get('from') === 'profile',
 		profileUserId: url.searchParams.get('user')
 	};
@@ -93,7 +104,6 @@ export const actions = {
 
 		const imageOwnerId = images[0].author_id;
 
-		// Prevent self-like
 		if (imageOwnerId === userId) {
 			return {
 				success: false
@@ -105,7 +115,6 @@ export const actions = {
 			[userId, imageId]
 		);
 
-		// Unlike
 		if (existing.length) {
 			await pool.execute(
 				'DELETE FROM votes WHERE user_id = ? AND image_id = ?',
@@ -122,7 +131,6 @@ export const actions = {
 			};
 		}
 
-		// Like
 		await pool.execute(
 			'INSERT INTO votes (user_id, image_id) VALUES (?, ?)',
 			[userId, imageId]
@@ -171,6 +179,81 @@ export const actions = {
 			VALUES (?, ?, ?)
 			`,
 			[params.id, userId, text]
+		);
+
+		return {
+			success: true
+		};
+	},
+
+	deleteImage: async ({ params, cookies }) => {
+		const sessionId = cookies.get('session');
+
+		if (!sessionId) {
+			throw redirect(303, '/login');
+		}
+
+		const [sessions] = await pool.execute(
+			'SELECT user_id FROM sessions WHERE id = ?',
+			[sessionId]
+		);
+
+		if (!sessions.length) {
+			throw redirect(303, '/login');
+		}
+
+		const userId = sessions[0].user_id;
+
+		const [users] = await pool.execute(
+			'SELECT is_admin FROM users WHERE id = ?',
+			[userId]
+		);
+
+		if (!users.length || !users[0].is_admin) {
+			throw error(403, 'Forbidden');
+		}
+
+		await pool.execute(
+			'DELETE FROM images WHERE id = ?',
+			[params.id]
+		);
+
+		throw redirect(303, '/');
+	},
+
+	deleteComment: async ({ request, cookies }) => {
+		const sessionId = cookies.get('session');
+
+		if (!sessionId) {
+			throw redirect(303, '/login');
+		}
+
+		const [sessions] = await pool.execute(
+			'SELECT user_id FROM sessions WHERE id = ?',
+			[sessionId]
+		);
+
+		if (!sessions.length) {
+			throw redirect(303, '/login');
+		}
+
+		const userId = sessions[0].user_id;
+
+		const [users] = await pool.execute(
+			'SELECT is_admin FROM users WHERE id = ?',
+			[userId]
+		);
+
+		if (!users.length || !users[0].is_admin) {
+			throw error(403, 'Forbidden');
+		}
+
+		const formData = await request.formData();
+		const commentId = formData.get('commentId');
+
+		await pool.execute(
+			'DELETE FROM comments WHERE id = ?',
+			[commentId]
 		);
 
 		return {

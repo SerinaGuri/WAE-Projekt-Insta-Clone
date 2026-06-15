@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import pool from '$lib/server/database.js';
 
-export async function load({ params, cookies }) {
+export async function load({ params, cookies, url }) {
 	const [rows] = await pool.execute(
 		`
 		SELECT
@@ -56,7 +56,9 @@ export async function load({ params, cookies }) {
 	return {
 		image: rows[0],
 		liked,
-		comments
+		comments,
+		fromProfile: url.searchParams.get('from') === 'profile',
+		profileUserId: url.searchParams.get('user')
 	};
 }
 
@@ -78,27 +80,25 @@ export const actions = {
 		}
 
 		const userId = sessions[0].user_id;
-const imageId = params.id;
+		const imageId = params.id;
 
-// get image owner
-const [images] = await pool.execute(
-	'SELECT author_id FROM images WHERE id = ?',
-	[imageId]
-);
+		const [images] = await pool.execute(
+			'SELECT author_id FROM images WHERE id = ?',
+			[imageId]
+		);
 
-if (!images.length) {
-	throw error(404, 'Image not found');
-}
+		if (!images.length) {
+			throw error(404, 'Image not found');
+		}
 
-const imageOwnerId = images[0].author_id;
+		const imageOwnerId = images[0].author_id;
 
-// prevent self-like
-if (imageOwnerId === userId) {
-	return {
-		success: false,
-		error: 'You cannot like your own image'
-	};
-}
+		// Prevent self-like
+		if (imageOwnerId === userId) {
+			return {
+				success: false
+			};
+		}
 
 		const [existing] = await pool.execute(
 			'SELECT id FROM votes WHERE user_id = ? AND image_id = ?',

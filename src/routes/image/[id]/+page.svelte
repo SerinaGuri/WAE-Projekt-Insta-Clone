@@ -3,10 +3,22 @@
 </script>
 
 <div class="max-w-4xl mx-auto">
-    <a href="/" class="inline-flex items-center gap-2 mb-6 text-purple-600 hover:text-purple-800 font-semibold">
-		← Back to Home
+	<a
+		href={
+			data.fromProfile
+				? `/profile/${data.profileUserId}`
+				: '/'
+		}
+		class="inline-flex items-center gap-2 mb-6 text-purple-600 hover:text-purple-800 font-semibold"
+	>
+		← Back
 	</a>
-	<img src={data.image.image} alt={data.image.description} class="w-full rounded-xl shadow mb-6"/>
+
+	<img
+		src={data.image.image}
+		alt={data.image.description}
+		class="w-full rounded-xl shadow mb-6"
+	/>
 
 	<div class="bg-white rounded-xl shadow p-6">
 		<h1 class="text-3xl font-bold mb-4">
@@ -18,15 +30,20 @@
 		</p>
 
 		<div class="flex items-center gap-4 mt-6">
-			<form method="POST" action="?/toggleLike">
-				<button type="submit" class="text-4xl hover:scale-110 transition">
-					{#if data.liked}
-						❤️
-					{:else}
-						🤍
-					{/if}
-				</button>
-			</form>
+			{#if data.image.author_id !== data.user?.id}
+				<form method="POST" action="?/toggleLike">
+					<button
+						type="submit"
+						class="text-4xl hover:scale-110 transition"
+					>
+						{#if data.liked}
+							❤️
+						{:else}
+							🤍
+						{/if}
+					</button>
+				</form>
+			{/if}
 
 			<span class="text-xl font-bold">
 				{data.image.votes} likes

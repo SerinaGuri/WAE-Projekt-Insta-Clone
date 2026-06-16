@@ -9,41 +9,58 @@
 
 <div class="max-w-6xl mx-auto">
 	<!-- Profile Header -->
-	<div class="bg-white rounded-2xl shadow p-8 mb-10">
-		<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-			<div>
-				<h1 class="text-4xl font-bold mb-2">
-					@{data.user.username}
-				</h1>
+<div class="relative overflow-hidden rounded-3xl mb-12">
+	<!-- Background -->
+	<div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-400"></div>
 
-				<p class="text-gray-500">
-					Image creator
-				</p>
+	<!-- Glow -->
+	<div class="absolute -top-20 -right-20 w-72 h-72 bg-white/20 rounded-full blur-3xl"></div>
+
+	<!-- Content -->
+	<div class="relative p-10 md:p-12 text-white">
+		<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+			<div class="flex items-center gap-6">
+				<!-- Avatar -->
+				<div class="w-28 h-28 rounded-3xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-5xl font-black shadow-2xl">
+					{data.user.username.charAt(0).toUpperCase()}
+				</div>
+
+				<div>
+					<h1 class="text-5xl font-black mb-2 tracking-tight">
+						@{data.user.username}
+					</h1>
+
+					<p class="text-white/80 text-lg">
+						Sharing creativity through images
+					</p>
+				</div>
 			</div>
 
-			<div class="flex gap-8 text-center">
-				<div>
-					<p class="text-3xl font-bold">
+			<!-- Stats -->
+			<div class="grid grid-cols-2 gap-4">
+				<div class="bg-white/15 backdrop-blur-md rounded-2xl px-8 py-5 text-center border border-white/20">
+					<p class="text-4xl font-black">
 						{data.images.length}
 					</p>
 
-					<p class="text-gray-500">
+					<p class="text-white/80 mt-1">
 						Posts
 					</p>
 				</div>
 
-				<div>
-					<p class="text-3xl font-bold">
+				<div class="bg-white/15 backdrop-blur-md rounded-2xl px-8 py-5 text-center border border-white/20">
+					<p class="text-4xl font-black">
 						{totalLikes}
 					</p>
 
-					<p class="text-gray-500">
+					<p class="text-white/80 mt-1">
 						Likes
 					</p>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
 	<!-- Gallery -->
 	{#if data.images.length === 0}
@@ -55,31 +72,36 @@
 	{:else}
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each data.images as image}
-				<a
-					href={`/image/${image.id}`}
-					class="group bg-white rounded-2xl overflow-hidden shadow hover:shadow-2xl transition"
-				>
-					<div class="overflow-hidden">
-						<img
-							src={image.image}
-							alt={image.description}
-							class="w-full aspect-square object-cover group-hover:scale-105 transition duration-300"
-						/>
-					</div>
+				<a href={`/image/${image.id}?from=profile&user=${data.user.id}`} class="group relative bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 hover:-translate-y-2">
+	<div class="overflow-hidden">
+		<img
+			src={image.image}
+			alt={image.description}
+			class="w-full aspect-square object-cover group-hover:scale-110 transition duration-500"
+		/>
+	</div>
 
-					<div class="p-4">
+	<!-- Overlay -->
+	<div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-300"></div>
+
+	<!-- Likes Badge -->
+	<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full font-bold shadow">
+		❤️ {image.votes}
+	</div>
+
+	<!-- Bottom Content -->
+					<div class="p-5">
 						<p class="text-gray-700 line-clamp-2 mb-4">
 							{image.description}
 						</p>
 
-						<div class="flex justify-between items-center">
-							<div class="font-bold">
-								❤️ {image.votes}
-							</div>
-
-							<div class="text-sm text-gray-500">
+						<div class="flex items-center justify-between">
+							<p class="text-sm text-gray-500">
 								{new Date(image.created_at).toLocaleDateString()}
-							</div>
+							</p>
+							<p class="text-sm font-semibold text-teal-600">
+								View →
+							</p>
 						</div>
 					</div>
 				</a>

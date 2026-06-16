@@ -209,8 +209,12 @@ export const actions = {
 			[userId]
 		);
 
-		if (!users.length || !users[0].is_admin) {
-			throw error(403, 'Forbidden');
+		const [images] = await pool.execute('SELECT author_id FROM images WHERE id = ?',[params.id]);
+		if (!images.length) {throw error(404, 'Image not found');	
+		}
+
+		const isOwner = images[0].author_id === userId;
+		if (!users.length || (!users[0].is_admin && !isOwner)) {throw error(403, 'Forbidden');
 		}
 
 		await pool.execute(

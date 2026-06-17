@@ -1,12 +1,10 @@
 <script>
 	let {data} = $props();
 
-	$effect(() => {
-		totalLikes = data.images.reduce(
-			(sum, image) => sum + image.votes,
-			0
-		);
-	});
+	const totalLikes = data.images.reduce(
+		(sum, image) => sum + image.votes,
+		0
+	);
 </script>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6">

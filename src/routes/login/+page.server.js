@@ -1,40 +1,65 @@
-// login/+page.server.js — Login Action
+// Funktionen für Fehlerbehandlung und Weiterleitungen importieren
 import { fail, redirect } from '@sveltejs/kit';
+// Datenbankverbindung importieren
 import pool from '$lib/server/database.js';
+// Funktionen für Passwortprüfung und Session-Erstellung importieren
 import { verifyPassword, createSession } from '$lib/server/auth.js';
-
+// Alle Formulare (Actions) dieser Seite
 export const actions = {
-    login: async ({ request, cookies }) => {
-        const form = await request.formData();
-        const username = form.get('username');
-        const password = form.get('password');
+    
+	/**
+	 * Login eines Benutzers
+	 */
+	login: async ({ request, cookies }) => {
 
-        if (!username || !password) {
-            return fail(400, { error: 'Bitte alle Felder ausfüllen.' });
-        }
+		// Formulardaten auslesen
+		const form = await request.formData();
 
-        const [rows] = await pool.execute(
-            'SELECT * FROM users WHERE username = ?',
-            [username]
-        );
+		// Benutzername aus dem Formular holen
+		const username = form.get('username');
 
-        if (rows.length === 0) {
-            return fail(400, { error: 'Username nicht gefunden.' });
-        }
+		// Passwort aus dem Formular holen
+		const password = form.get('password');
 
-        if (!(await verifyPassword(password, rows[0].password_hash))) {
-            return fail(400, { error: 'Falsches Passwort.' });
-        }
+		// Prüfen ob alle Felder ausgefüllt wurden
+		if (!username || !password) {
+			return fail(400, {
+				error: 'Bitte alle Felder ausfüllen.'
+			});
+		}
 
-        // Session erstellen und Cookie setzen
-        const sessionId = await createSession(rows[0].id);
-        cookies.set('session', sessionId, {
-            path: '/',
-            httpOnly: true,
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 24 * 30
-        });
+		// Benutzer anhand des Usernamens suchen
+		const [rows] = await pool.execute(
+			'SELECT * FROM users WHERE username = ?',
+			[username]
+		);
 
-        throw redirect(303, '/');
-    }
+		// Fehlermeldung wenn Benutzer nicht gefunden wurde
+		if (rows.length === 0) {
+			return fail(400, {
+				error: 'Username nicht gefunden.'
+			});
+		}
+
+		// Passwort mit dem gespeicherten Hash vergleichen
+		if (!(await verifyPassword(password, rows[0].password_hash))) {
+			return fail(400, {
+				error: 'Falsches Passwort.'
+			});
+		}
+
+		// Neue Session erstellen
+		const sessionId = await createSession(rows[0].id);
+
+		// Session-ID als Cookie speichern
+		cookies.set('session', sessionId, {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'strict',
+			maxAge: 60 * 60 * 24 * 30
+		});
+
+		// Nach erfolgreichem Login zur Startseite weiterleiten
+		throw redirect(303, '/');
+	}
 };

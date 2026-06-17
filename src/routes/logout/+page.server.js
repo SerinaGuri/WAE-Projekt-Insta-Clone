@@ -1,18 +1,35 @@
-//Session löschen und zur Startseite weiterleiten
+// logout/+page.server.js
+
+// Funktion für Weiterleitungen importieren
 import { redirect } from '@sveltejs/kit';
+
+// Funktion zum Löschen einer Session importieren
 import { invalidateSession } from '$lib/server/auth.js';
 
+// Aktionen dieser Seite
 export const actions = {
-    default: async ({ cookies }) => {
-        const sessionId = cookies.get('session');
 
-        if (sessionId) {
-            // Session aus der Datenbank löschen
-            await invalidateSession(sessionId);
-            // Cookie löschen
-            cookies.delete('session', { path: '/' });
-        }
+	/**
+	 * Standard-Action für den Logout
+	 */
+	default: async ({ cookies }) => {
 
-        throw redirect(303, '/');
-    }
+		// Session-ID aus den Cookies auslesen
+		const sessionId = cookies.get('session');
+
+		// Prüfen ob eine Session vorhanden ist
+		if (sessionId) {
+
+			// Session aus der Datenbank löschen
+			await invalidateSession(sessionId);
+
+			// Session-Cookie im Browser löschen
+			cookies.delete('session', {
+				path: '/'
+			});
+		}
+
+		// Nach dem Logout zur Startseite weiterleiten
+		throw redirect(303, '/');
+	}
 };

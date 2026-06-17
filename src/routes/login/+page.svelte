@@ -1,6 +1,5 @@
 <script>
     let { form } = $props();
-    
     // Svelte 5 State für die Passwort-Sichtbarkeit
     let showPassword = $state(false);
 </script>
@@ -21,10 +20,7 @@
 
         {#if form?.error}
             <div class="bg-rose-50 text-rose-600 text-sm font-medium px-4 py-3 rounded-xl mb-6 border border-rose-100 flex items-center gap-2 relative z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                </svg>
-                <span>{form.error}</span>
+                <p>! Falsches Passwort</p>
             </div>
         {/if}
 
@@ -71,25 +67,12 @@
                     Password
                 </label>
                 
-                <button
-                    type="button"
-                    onclick={() => showPassword = !showPassword}
-                    class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
-                    aria-label="Passwort anzeigen/verstecken"
-                >
-                    {#if showPassword}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
-                            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
-                            <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
-                            <line x1="2" y1="2" x2="22" y2="22"/>
-                        </svg>
-                    {:else}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    {/if}
+                <button type="button" onclick={() => showPassword = !showPassword} class="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
+                	{#if showPassword}
+	                	Hide
+                	{:else}
+                		Show
+                	{/if}
                 </button>
             </div>
 

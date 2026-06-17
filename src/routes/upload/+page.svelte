@@ -1,5 +1,10 @@
+<!-- Zentriert den Upload-Bereich auf der Seite -->
 <div class="max-w-2xl mx-auto">
+
+	<!-- Upload-Karte mit Schatten und abgerundeten Ecken -->
 	<div class="bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
+
+		<!-- Überschrift und Beschreibung -->
 		<div class="mb-8">
 			<h1 class="text-4xl font-black text-purple-600 mb-2">
 				Upload an Image
@@ -10,12 +15,15 @@
 			</p>
 		</div>
 
+		<!-- Formular zum Hochladen eines Bildes -->
 		<form
 			method="POST"
 			action="?/add"
 			enctype="multipart/form-data"
 			class="space-y-6"
 		>
+
+			<!-- Dateiauswahl für das Bild -->
 			<div>
 				<label class="block text-sm font-semibold text-slate-700 mb-2">
 					Image
@@ -30,6 +38,7 @@
 				/>
 			</div>
 
+			<!-- Eingabefeld für die Bildbeschreibung -->
 			<div>
 				<label class="block text-sm font-semibold text-slate-700 mb-2">
 					Description
@@ -43,6 +52,7 @@
 				></textarea>
 			</div>
 
+			<!-- Button zum Absenden des Formulars -->
 			<button
 				type="submit"
 				class="w-full bg-purple-600 text-white py-3 rounded-2xl font-bold hover:bg-purple-700 transition duration-200 shadow-lg hover:shadow-xl"

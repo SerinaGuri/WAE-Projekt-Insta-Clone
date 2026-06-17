@@ -1,17 +1,21 @@
 <script>
+	// Daten aus der load-Funktion von +page.server.js übernehmen
 	let { data } = $props();
 </script>
 
+<!-- Seitenüberschrift -->
 <div class="mb-10">
 	<h1 class="text-5xl font-black text-purple-600 hover:text-purple-700 transition">
 		Trending Images
 	</h1>
 
+	<!-- Kurze Beschreibung der Seite -->
 	<p class="text-gray-500 text-lg">
 		The 25 most liked images from the community
 	</p>
 </div>
 
+<!-- Falls keine Bilder vorhanden sind -->
 {#if data.images.length === 0}
 	<div class="bg-white rounded-3xl shadow p-12 text-center">
 		<p class="text-2xl font-bold text-gray-700">
@@ -22,13 +26,22 @@
 			Be the first one to upload something.
 		</p>
 	</div>
+
 {:else}
+
+	<!-- Grid-Layout für die Bildübersicht -->
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+		<!-- Für jedes Bild wird eine Karte erstellt -->
 		{#each data.images as image}
+
+			<!-- Link zur Detailseite des Bildes -->
 			<a
 				href={`/image/${image.id}`}
 				class="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 hover:-translate-y-2"
 			>
+
+				<!-- Bildanzeige -->
 				<div class="overflow-hidden">
 					<img
 						src={image.image}
@@ -37,7 +50,10 @@
 					/>
 				</div>
 
+				<!-- Informationen zum Bild -->
 				<div class="p-5">
+
+					<!-- Benutzername und Anzahl der Likes -->
 					<div class="flex items-center justify-between mb-3">
 						<p class="font-bold text-lg text-gray-800">
 							@{image.username}
@@ -49,11 +65,13 @@
 						</div>
 					</div>
 
+					<!-- Beschreibung des Bildes -->
 					<p class="text-gray-600 line-clamp-2">
 						{image.description}
 					</p>
 				</div>
 			</a>
+
 		{/each}
 	</div>
 {/if}

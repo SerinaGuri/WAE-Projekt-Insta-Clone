@@ -1,9 +1,11 @@
 <script>
-	let {data} = $props();
+	let { data } = $props();
 
-	const totalLikes = data.images.reduce(
-		(sum, image) => sum + image.votes,
-		0
+	let totalLikes = $derived(
+		data.images.reduce(
+			(sum, image) => sum + image.votes,
+			0
+		)
 	);
 </script>
 

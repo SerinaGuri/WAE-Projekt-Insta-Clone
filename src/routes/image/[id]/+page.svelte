@@ -2,57 +2,79 @@
 	let { data } = $props();
 </script>
 
-<div class="max-w-4xl mx-auto">
-	<a href={data.fromProfile? `/profile/${data.profileUserId}`	: '/'} class="inline-flex items-center gap-2 mb-6 text-purple-600 hover:text-purple-800 font-semibold">
+<div class="max-w-4xl mx-auto px-4 sm:px-6">
+	<a
+		href={data.fromProfile ? `/profile/${data.profileUserId}` : '/'}
+		class="inline-flex items-center gap-2 mb-6 text-purple-600 hover:text-purple-800 font-semibold"
+	>
 		← Back
 	</a>
 
-	<img src={data.image.image} alt={data.image.description} class="w-full max-h-[75vh] object-cover rounded-3xl shadow-2xl mb-8"/>
+	<img
+		src={data.image.image}
+		alt={data.image.description}
+		class="w-full max-h-[50vh] sm:max-h-[60vh] md:max-h-[75vh] object-cover rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl mb-8"
+	/>
 
-	<div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8 border border-gray-100">
-		<h1 class="text-4xl font-black mb-3 text-slate-800">
+	<div class="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
+		<h1 class="text-2xl sm:text-3xl md:text-4xl font-black mb-3 text-slate-800 wrap-break-word">
 			{data.image.username}
 		</h1>
 
-		<p class="text-xl text-slate-600 leading-relaxed mb-8">
+		<p class="text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed mb-8 wrap-break-word">
 			{data.image.description}
 		</p>
 
-		<div class="flex items-center gap-4 mt-6">
-		{#if data.image.author_id !== data.user?.id}
-			<form method="POST" action="?/toggleLike">
-				<button type="submit" class="text-4xl hover:scale-110 transition">
-				{#if data.liked}
-					❤️
-				{:else}
-					🤍
-				{/if}
-				</button>
-			</form>
-		{/if}
+		<div class="flex flex-wrap items-center gap-4 mt-6">
+			{#if data.image.author_id !== data.user?.id}
+				<form method="POST" action="?/toggleLike">
+					<button
+						type="submit"
+						class="text-3xl sm:text-4xl hover:scale-110 transition"
+					>
+						{#if data.liked}
+							❤️
+						{:else}
+							🤍
+						{/if}
+					</button>
+				</form>
+			{/if}
 
-		<span class="text-xl font-bold">
-			{data.image.votes} likes
-		</span>
+			<span class="text-lg sm:text-xl font-bold">
+				{data.image.votes} likes
+			</span>
 		</div>
 
 		{#if data.user && (data.user.id === data.image.author_id || data.user.is_admin)}
 			<form method="POST" action="?/deleteImage" class="mt-6">
-				<button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+				<button
+					type="submit"
+					class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+				>
 					Delete Image
 				</button>
 			</form>
 		{/if}
 
 		<div class="mt-10">
-			<h2 class="text-2xl font-bold mb-4">
+			<h2 class="text-xl sm:text-2xl font-bold mb-4">
 				Comments
 			</h2>
 
 			<form method="POST" action="?/comment" class="mb-8">
-				<textarea name="text" placeholder="Write a comment..." required class="w-full border rounded-lg p-3 mb-3 rows=4"></textarea>
+				<textarea
+					name="text"
+					placeholder="Write a comment..."
+					required
+					rows="4"
+					class="w-full border rounded-lg p-3 mb-3"
+				></textarea>
 
-				<button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+				<button
+					type="submit"
+					class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+				>
 					Post Comment
 				</button>
 			</form>
@@ -60,8 +82,8 @@
 			<div class="space-y-4">
 				{#each data.comments as comment}
 					<div class="bg-gray-100 rounded-xl p-4">
-						<div class="flex justify-between items-center mb-2">
-							<p class="font-bold">
+						<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 mb-2">
+							<p class="font-bold wrap-break-word">
 								{comment.username}
 							</p>
 
@@ -70,17 +92,26 @@
 							</p>
 						</div>
 
-						<p class="text-gray-700">
+						<p class="text-gray-700 wrap-break-word">
 							{comment.text}
 						</p>
-				{#if data.user?.is_admin}
-					<form method="POST" action="?/deleteComment" class="mt-3">
-					<input type="hidden" name="commentId" value={comment.id}/>
-					<button type="submit" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-						Delete Comment
-					</button>
-				</form>
-				{/if}
+
+						{#if data.user?.is_admin}
+							<form method="POST" action="?/deleteComment" class="mt-3">
+								<input
+									type="hidden"
+									name="commentId"
+									value={comment.id}
+								/>
+
+								<button
+									type="submit"
+									class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+								>
+									Delete Comment
+								</button>
+							</form>
+						{/if}
 					</div>
 				{/each}
 			</div>

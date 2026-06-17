@@ -3,7 +3,7 @@
 </script>
 
 <div class="mb-10">
-	<h1 class="text-5xl font-black mb-3 bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+	<h1 class="text-5xl font-black text-purple-600 hover:text-purple-700 transition">
 		Trending Images
 	</h1>
 

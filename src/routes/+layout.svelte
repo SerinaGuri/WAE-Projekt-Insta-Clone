@@ -12,10 +12,9 @@
 <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-purple-100 shadow-sm">
 	<nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 		<!-- Logo -->
-		<a href="/" class="text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent hover:scale-105 transition">
+		<a href="/" class="text-3xl font-black text-purple-600 hover:text-purple-700 transition">
 			ImageBlog
 		</a>
-
 		<!-- Navigation -->
 		<div class="flex items-center gap-3">
 			<a href="/" class="px-4 py-2 rounded-xl hover:bg-purple-100 transition font-medium"
@@ -70,6 +69,8 @@
 	</nav>
 </header>
 
-<main class="max-w-7xl mx-auto px-6 py-8">
-	{@render children()}
-</main>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50">
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+		{@render children()}
+	</main>
+</div>

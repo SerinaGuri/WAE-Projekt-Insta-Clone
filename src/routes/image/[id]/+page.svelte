@@ -7,14 +7,14 @@
 		← Back
 	</a>
 
-	<img src={data.image.image} alt={data.image.description} class="w-full rounded-xl shadow mb-6"/>
+	<img src={data.image.image} alt={data.image.description} class="w-full max-h-[75vh] object-cover rounded-3xl shadow-2xl mb-8"/>
 
-	<div class="bg-white rounded-xl shadow p-6">
-		<h1 class="text-3xl font-bold mb-4">
+	<div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8 border border-gray-100">
+		<h1 class="text-4xl font-black mb-3 text-slate-800">
 			{data.image.username}
 		</h1>
 
-		<p class="text-lg text-gray-700 mb-6">
+		<p class="text-xl text-slate-600 leading-relaxed mb-8">
 			{data.image.description}
 		</p>
 
@@ -74,14 +74,13 @@
 							{comment.text}
 						</p>
 				{#if data.user?.is_admin}
-		<form method="POST" action="?/deleteComment" class="mt-3">
-		<input type="hidden" name="commentId" value={comment.id}/>
-
-		<button type="submit" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-			Delete Comment
-		</button>
-	</form>
-{/if}
+					<form method="POST" action="?/deleteComment" class="mt-3">
+					<input type="hidden" name="commentId" value={comment.id}/>
+					<button type="submit" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+						Delete Comment
+					</button>
+				</form>
+				{/if}
 					</div>
 				{/each}
 			</div>
